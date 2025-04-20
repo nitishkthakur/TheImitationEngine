@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
+from dash import dcc
 import dash_html_components as html
 import pandas as pd
 import json
@@ -10,6 +10,8 @@ from pages import layout_home
 from pages import callbacks_home
 from functions import llm
 import logging
+import subprocess
+import time
 
 path = os.path.dirname(os.path.abspath(__file__))
 cache = diskcache.Cache(path + '/cache')
@@ -31,9 +33,20 @@ app.config.suppress_callback_exceptions = True
 app.layout = layout_home.layout
 
 
-
+def start_ollama_serve_background():
+    # Start ollama serve in the background
+    proc = subprocess.Popen(
+        ["ollama", "serve"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
+    )
+    print(f"Ollama serve started with PID {proc.pid}")
+    return proc
 
 if __name__ == "__main__":
+    start_ollama_serve_background()
+    time.sleep(4)
     app.run_server(debug=True, port=8050,  threaded=True)
 
 
