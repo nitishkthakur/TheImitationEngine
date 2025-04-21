@@ -1,0 +1,29 @@
+# Base Image
+FROM python:3.10-slim
+
+# 2.Install OS-level deps (curl)
+RUN apt-get update && apt-get -y --no-install-recommends curl && \
+rm -rf /var/lib/apt/lists/*
+
+# Install OLLAMA CLI
+RUN curl -fcFL https://ollama.com/install.sh | sh
+
+# 4. Create app directory
+WORKDIR /app
+
+# Copy and install python deps
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy app source
+COPY . .
+
+# Pull LLAMA model
+RUN ollama pull llama3.2:1b
+
+# Expose PORTS
+EXPOSE 8050
+EXPOSE 11434
+
+# # Start the app
+CMD ["sh", "-c", "ollama serve & sleep 5 && python main.py"]
