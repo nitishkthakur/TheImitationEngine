@@ -15,11 +15,13 @@ class LLM:
         self.messages[0]['content'] = self.system_instructions
         
     def load_llm(self):
-        chat(
+        print("Entering Chat Function")
+        response_null = chat(
             model="llama3.2:1b",
             messages=[],         # empty list ⇒ just load, no generation
             keep_alive=-1        # keep loaded indefinitely
         )
+        print(response_null)
         print("model loaded")
 
     def chat(self, user_prompt):
