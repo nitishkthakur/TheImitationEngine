@@ -2,11 +2,16 @@
 FROM python:3.10-slim
 
 # 2.Install OS-level deps (curl)
-RUN apt-get update && apt-get -y --no-install-recommends curl && \
-rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      curl \
+      unzip \
+      tar \
+      ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install OLLAMA CLI
-RUN curl -fcFL https://ollama.com/install.sh | sh
+RUN curl -fsSL https://ollama.com/install.sh | sh
 
 # 4. Create app directory
 WORKDIR /app
